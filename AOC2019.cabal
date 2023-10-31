@@ -111,7 +111,8 @@ executable AOC2019
         Day23,
         Day24,
         Day25,
-        MyLib
+        MyLib,
+        OpCode
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
