@@ -7,17 +7,16 @@ candidates = permutations [0 .. 4]
 candidates' = permutations [5 .. 9]
 
 day7a :: [Int] -> UBOC -> Int
-day7a input oc = foldl' (\acc x -> head (_output $ snd (runOpCodeWith runSTOC (oc {_input = [x, acc]})))) 0 input
+day7a input oc = foldl' (\acc x -> head (_output (runOpCodeWith runSTOC (oc {_input = [x, acc]})))) 0 input
 
 day7b :: [[Int]] -> [UBOC] -> [[Int]]
 day7b input oc
-  | all fst runOC = output
-  | otherwise = day7b input' oc'
+  | all _halt runOC = output
+  | otherwise = day7b input' runOC
   where
     ocStart = zipWith (\x y -> x {_input = _input x ++ y, _output = []}) oc input
     runOC = map (runOpCodeWith runSTOC) ocStart
-    oc' = map snd runOC
-    output = map _output oc'
+    output = map _output runOC
     input' = last output : init output
 
 day7 :: IO ()
