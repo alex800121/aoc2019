@@ -5,8 +5,11 @@ import Data.List.Split (splitOn)
 -- import qualified Data.Vector.Unboxed as U
 import Data.IntMap (IntMap)
 import qualified Data.IntMap as IM
+-- import Data.Map (Map)
+-- import qualified Data.Map as IM
 import OpCode
 
+-- type IntMap = Map Integer
 target = 19690720
 
 day2 :: IO ()

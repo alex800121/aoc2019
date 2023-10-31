@@ -6,10 +6,10 @@ import OpCode
 candidates = permutations [0 .. 4]
 candidates' = permutations [5 .. 9]
 
-day7a :: [Int] -> UBOC -> Int
+day7a :: [Integer] -> UBOC -> Integer
 day7a input oc = foldl' (\acc x -> head (_output (runOpCodeWith runSTOC (oc {_input = [x, acc]})))) 0 input
 
-day7b :: [[Int]] -> [UBOC] -> [[Int]]
+day7b :: [[Integer]] -> [UBOC] -> [[Integer]]
 day7b input oc
   | all _halt runOC = output
   | otherwise = day7b input' runOC
