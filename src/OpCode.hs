@@ -8,18 +8,23 @@ module OpCode
     UBOC,
     STOC,
     readInput,
+    stToUB,
+    ubToST,
   )
 where
 
 import Control.Monad (void)
 import Control.Monad.ST.Strict (ST, runST)
-import Data.IntMap (IntMap)
-import qualified Data.IntMap as IM
-
-import Data.List (uncons)
-import Data.List.Split (splitOn)
 -- import Data.Map (Map)
 -- import qualified Data.Map as IM
+
+import Data.DList (DList)
+import qualified Data.DList as DL
+import Data.Functor.Identity (Identity (Identity, runIdentity))
+import Data.IntMap (IntMap)
+import qualified Data.IntMap as IM
+import Data.List (uncons)
+import Data.List.Split (splitOn)
 import Data.STRef.Strict
 
 -- import Data.Vector.Unboxed hiding (elem, head, map, read, tail, uncons)
@@ -29,28 +34,29 @@ import Data.STRef.Strict
 
 -- type IntMap = Map Integer
 
-data PrimOC i v j b = PrimOC
-  { _position :: i,
-    _base :: i,
-    _vector :: v,
-    _input :: j,
-    _output :: j,
-    _halt :: b
+data PrimOC i v j b f = PrimOC
+  { _position :: f i,
+    _base :: f i,
+    _vector :: f v,
+    _input :: f j,
+    _output :: f j,
+    _halt :: f b
   }
   deriving (Show, Eq, Ord)
 
-type UBOC = PrimOC Int (IntMap Integer) [Integer] Bool
+type UBOC = PrimOC Int (IntMap Integer) (DList Integer) Bool Identity
+
 -- type UBOC = PrimOC Integer (IntMap Integer) [Integer] Bool
 
-type STOC s = STRef s UBOC
+type STOC s = PrimOC Int (IntMap Integer) (DList Integer) Bool (STRef s)
 
 readDefaultWith :: Integer -> STOC s -> Int -> ST s Integer
 readDefaultWith def oc i = do
-  m <- _vector <$> readSTRef oc
+  m <- readSTRef $ _vector oc
   case m IM.!? i of
     Just x -> pure x
     Nothing -> do
-      modifySTRef' oc (\x -> x {_vector = IM.insert i def $ _vector x})
+      modifySTRef' (_vector oc) (IM.insert i def)
       pure def
 
 readDefault = readDefaultWith 0
@@ -63,22 +69,49 @@ readDefault = readDefaultWith 0
 --     v' <- UM.grow v d
 --     UM.read v' i
 
+mkUBOC :: Int -> Int -> IntMap Integer -> DList Integer -> DList Integer -> Bool -> UBOC
+mkUBOC a b c d e f =
+  PrimOC
+    (Identity a)
+    (Identity b)
+    (Identity c)
+    (Identity d)
+    (Identity e)
+    (Identity f)
+
 readInput :: String -> UBOC
-readInput s = PrimOC 0 0 (IM.fromList (zip [0 ..] . map (read @Integer) . splitOn "," $ s)) [] [] False
+readInput s = mkUBOC 0 0 (IM.fromList (zip [0 ..] . map (read @Integer) . splitOn "," $ s)) DL.empty DL.empty False
+
+ubToST :: UBOC -> ST s (STOC s)
+ubToST (PrimOC a b c d e f) = do
+  a' <- newSTRef $ runIdentity a
+  b' <- newSTRef $ runIdentity b
+  c' <- newSTRef $ runIdentity c
+  d' <- newSTRef $ runIdentity d
+  e' <- newSTRef $ runIdentity e
+  f' <- newSTRef $ runIdentity f
+  return $ PrimOC a' b' c' d' e' f'
+
+stToUB :: STOC s -> ST s UBOC
+stToUB (PrimOC a b c d e f) = do
+  a' <- Identity <$> readSTRef a
+  b' <- Identity <$> readSTRef b
+  c' <- Identity <$> readSTRef c
+  d' <- Identity <$> readSTRef d
+  e' <- Identity <$> readSTRef e
+  f' <- Identity <$> readSTRef f
+  return $ PrimOC a' b' c' d' e' f'
 
 runOpCodeWith :: (forall s. STOC s -> ST s ()) -> UBOC -> UBOC
-runOpCodeWith f oc = g
-  where
-    g = runST $ do
-      oc' <- newSTRef oc
-      f oc'
-      readSTRef oc'
+runOpCodeWith f oc = runST $ do
+  oc' <- ubToST oc
+  f oc'
+  stToUB oc'
 
 runSTOC :: STOC s -> ST s ()
 runSTOC oc = do
-  oc' <- readSTRef oc
-  let i = _position oc'
-      base = _base oc'
+  i <- readSTRef $ _position oc
+  base <- readSTRef $ _base oc
   y <- readDefault oc i
   -- traceM (show (i, base))
   let x = y `mod` 100
@@ -96,25 +129,26 @@ runSTOC oc = do
         0 -> fromIntegral
         2 -> (+ base) . fromIntegral
   case x of
-    99 -> void $ modifySTRef' oc (\x -> x {_halt = True})
+    99 -> writeSTRef (_halt oc) True
     3 -> do
       c <- p1' <$> readDefault oc (i + 1)
-      case uncons (_input oc') of
-        Nothing -> pure ()
-        Just (h, t) -> do
-          modifySTRef oc (\x -> x {_vector = IM.insert (fromIntegral c) h $ _vector x})
-          modifySTRef oc (\x -> x {_input = t})
-          modifySTRef oc (\x -> x {_position = 2 + _position x})
+      l <- readSTRef $ _input oc
+      case l of
+        DL.Nil -> pure ()
+        DL.Cons h t -> do
+          modifySTRef (_vector oc) (IM.insert (fromIntegral c) h)
+          writeSTRef (_input oc) (DL.fromList t)
+          modifySTRef (_position oc) (+ 2)
           runSTOC oc
     4 -> do
       c <- readDefault oc (i + 1) >>= p1
-      modifySTRef oc (\x -> x {_output = c : _output x})
-      modifySTRef oc (\x -> x {_position = 2 + _position x})
+      modifySTRef (_output oc) (`DL.snoc` c)
+      modifySTRef (_position oc) (+ 2)
       runSTOC oc
     9 -> do
       c <- readDefault oc (i + 1) >>= p1
-      modifySTRef oc (\x -> x {_base = fromIntegral c + _base x})
-      modifySTRef oc (\x -> x {_position = 2 + _position x})
+      modifySTRef (_base oc) (+ fromIntegral c)
+      modifySTRef (_position oc) (+ 2)
       runSTOC oc
     y | y `elem` [5, 6] -> do
       a <- readDefault oc (i + 1) >>= p1
@@ -122,8 +156,8 @@ runSTOC oc = do
             5 -> a /= 0
             6 -> a == 0
       if c
-        then readDefault oc (i + 2) >>= p2 >>= \w -> modifySTRef' oc (\x -> x {_position = fromIntegral w})
-        else modifySTRef oc (\x -> x {_position = 3 + _position x})
+        then readDefault oc (i + 2) >>= p2 >>= \w -> writeSTRef (_position oc) (fromIntegral w)
+        else modifySTRef (_position oc) (+ 3)
       runSTOC oc
     y | y `elem` [1, 2, 7, 8] -> do
       a <- readDefault oc (i + 1) >>= p1
@@ -134,6 +168,6 @@ runSTOC oc = do
             2 -> (*)
             7 -> \e f -> if e < f then 1 else 0
             8 -> \e f -> if e == f then 1 else 0
-      modifySTRef oc (\x -> x {_vector = IM.insert c (op a b) (_vector x)})
-      modifySTRef oc (\x -> x {_position = 4 + _position x})
+      modifySTRef (_vector oc) (IM.insert c (op a b))
+      modifySTRef (_position oc) (+ 4)
       runSTOC oc

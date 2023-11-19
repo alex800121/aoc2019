@@ -7,7 +7,9 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import Data.Maybe (fromMaybe)
 import MyLib (Direction (..), drawGraph)
+import qualified Data.DList as DL
 import OpCode
+import Data.Functor.Identity (Identity(..))
 
 type Floor = Map Index Integer
 
@@ -17,13 +19,13 @@ data GameState = G {_floor :: Floor, _oc :: UBOC, _pos :: Index, _dir :: Directi
 
 run :: GameState -> GameState
 run g@(G f o p@(x, y) d)
-  | _halt o = g
+  | runIdentity $ _halt o = g
   | otherwise = run g'
   where
     g' = G f' o' p' d'
     input = fromIntegral $ fromMaybe 0 (f Map.!? p)
-    o' = runOpCodeWith runSTOC (o {_input = [input]})
-    turn : paint : _ = _output o'
+    o' = runOpCodeWith runSTOC (o {_input = Identity $ DL.singleton input})
+    turn : paint : _ = reverse $ DL.toList $ runIdentity $ _output o'
     f' = Map.insert p paint f
     d' = (if turn == 0 then pred else succ) d
     p' = bimap (+ x) (+ y) $ case d' of

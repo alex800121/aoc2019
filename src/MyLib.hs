@@ -26,6 +26,12 @@ import Text.Megaparsec
 import Text.Megaparsec.Char (space)
 import Text.Megaparsec.Char.Lexer (decimal, signed)
 
+pickAnySplit :: [a] -> [(a, [a])]
+pickAnySplit = f id
+  where
+    f _ [] = []
+    f g (x : xs) = (x, g xs) : f (g . (x :)) xs
+
 (+&) :: (Num a, Num b) => (a, b) -> (a, b) -> (a, b)
 (a, b) +& (c, d) = (a + c, b + d)
 
