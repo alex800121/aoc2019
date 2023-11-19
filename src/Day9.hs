@@ -1,6 +1,8 @@
 module Day9 where
 
 import OpCode
+import Data.DList (singleton)
+import Data.Functor.Identity (Identity(..))
 
 x = readInput "1102,34915192,34915192,7,4,7,99,0"
 
@@ -10,10 +12,12 @@ day9 = do
   putStrLn
     . ("day9a: " ++)
     . show
+    . runIdentity
     . _output
-    . runOpCodeWith runSTOC $ input {_input = [1]}
+    . runOpCodeWith runSTOC $ input {_input = Identity $ singleton 1}
   putStrLn
     . ("day9b: " ++)
     . show
+    . runIdentity
     . _output
-    . runOpCodeWith runSTOC $ input {_input = [2]}
+    . runOpCodeWith runSTOC $ input {_input = Identity $ singleton 2}
