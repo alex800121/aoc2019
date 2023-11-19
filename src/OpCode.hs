@@ -10,6 +10,7 @@ module OpCode
     readInput,
     stToUB,
     ubToST,
+    mkUBOC,
   )
 where
 
