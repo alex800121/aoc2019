@@ -13,10 +13,6 @@ step j l = map ((`mod` 10) . abs . sum) $ zipWith (zipWith (*)) (replicate len l
 
 fastStep = scanr (\x acc -> (x + acc) `mod` 10) 0
 
-test = "12345678"
-
-test2 = "03036732577212944063491565474664"
-
 day16 :: IO ()
 day16 = do
   input <- init <$> readFile "input/input16.txt"
