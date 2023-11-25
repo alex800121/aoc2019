@@ -195,7 +195,9 @@ day15	/home/alex800121/haskell/aoc/2019/src/Day15.hs	71;"	f
 day16	/home/alex800121/haskell/aoc/2019/src/Day16.hs	16;"	f
 day17	/home/alex800121/haskell/aoc/2019/src/Day17.hs	82;"	f
 day18	/home/alex800121/haskell/aoc/2019/src/Day18.hs	147;"	f
-day19	/home/alex800121/haskell/aoc/2019/src/Day19.hs	3;"	f
+day19	/home/alex800121/haskell/aoc/2019/src/Day19.hs	26;"	f
+day19a	/home/alex800121/haskell/aoc/2019/src/Day19.hs	8;"	f
+day19b	/home/alex800121/haskell/aoc/2019/src/Day19.hs	17;"	f
 day2	/home/alex800121/haskell/aoc/2019/src/Day2.hs	16;"	f
 day20	/home/alex800121/haskell/aoc/2019/src/Day20.hs	3;"	f
 day21	/home/alex800121/haskell/aoc/2019/src/Day21.hs	3;"	f
@@ -237,6 +239,7 @@ energy	/home/alex800121/haskell/aoc/2019/src/Day12.hs	54;"	f
 eq	/home/alex800121/haskell/aoc/2019/src/Day4.hs	15;"	f
 extEuc	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	369;"	f
 f	/home/alex800121/haskell/aoc/2019/src/Day16.hs	7;"	f
+f	/home/alex800121/haskell/aoc/2019/src/Day19.hs	15;"	f
 factors	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	229;"	f
 fastStep	/home/alex800121/haskell/aoc/2019/src/Day16.hs	14;"	f
 findFunctions	/home/alex800121/haskell/aoc/2019/src/Day17.hs	58;"	f
