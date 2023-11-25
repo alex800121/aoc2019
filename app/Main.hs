@@ -45,7 +45,7 @@ main = do
   -- day14
   -- day15
   -- day16
-  day17
+  -- day17
   day18
   day19
   day20
