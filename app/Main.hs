@@ -48,8 +48,8 @@ main = do
   -- day17
   -- day18
   -- day19
-  day20
-  day21
+  -- day20
+  -- day21
   day22
   day23
   day24
