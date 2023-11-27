@@ -11,6 +11,7 @@ module OpCode
     stToUB,
     ubToST,
     mkUBOC,
+    inputOpCode,
   )
 where
 
@@ -102,6 +103,9 @@ stToUB (PrimOC a b c d e f) = do
   e' <- Identity <$> readSTRef e
   f' <- Identity <$> readSTRef f
   return $ PrimOC a' b' c' d' e' f'
+
+inputOpCode :: [Integer] -> UBOC -> UBOC
+inputOpCode i oc = oc {_input = Identity $ (`DL.append` DL.fromList i) $ runIdentity $ _input oc}
 
 runOpCodeWith :: (forall s. STOC s -> ST s ()) -> UBOC -> UBOC
 runOpCodeWith f oc = runST $ do
