@@ -36,7 +36,9 @@ common shared
         base16-bytestring,
         multiset,
         pqueue,
-        dlist
+        dlist,
+        finite-typelits,
+        groups
     default-extensions: TypeFamilies, OverloadedRecordDot, TypeApplications, DataKinds
     ghc-options: -O2
 
