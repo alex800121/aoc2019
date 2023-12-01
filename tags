@@ -60,7 +60,7 @@ G	/home/alex800121/haskell/aoc/2019/src/Day18.hs	48;"	C
 G	/home/alex800121/haskell/aoc/2019/src/Day21.hs	25;"	C
 GameState	/home/alex800121/haskell/aoc/2019/src/Day11.hs	18;"	t
 GameState	/home/alex800121/haskell/aoc/2019/src/Day18.hs	48;"	t
-GameState	/home/alex800121/haskell/aoc/2019/src/Day23.hs	10;"	t
+GameState	/home/alex800121/haskell/aoc/2019/src/Day23.hs	12;"	t
 H	/home/alex800121/haskell/aoc/2019/src/Day21.hs	26;"	C
 I	/home/alex800121/haskell/aoc/2019/src/Day21.hs	27;"	C
 Index	/home/alex800121/haskell/aoc/2019/src/Day10.hs	15;"	t
@@ -209,7 +209,7 @@ catchIO	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9
 catchIO	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.4.7/AOC2020-0.1.0.0/x/AOC2019/build/AOC2019/autogen/Paths_AOC2020.hs	25;"	f
 catchIO	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.6.3/AOC2020-0.1.0.0/build/autogen/Paths_AOC2020.hs	25;"	f
 catchIO	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.6.3/AOC2020-0.1.0.0/x/AOC2019/build/AOC2019/autogen/Paths_AOC2020.hs	25;"	f
-collectOutput	/home/alex800121/haskell/aoc/2019/src/Day23.hs	12;"	f
+collectOutput	/home/alex800121/haskell/aoc/2019/src/Day23.hs	14;"	f
 copyright	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.4.5/AOC2020-0.1.0.0/build/autogen/PackageInfo_AOC2020.hs	22;"	f
 copyright	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.4.5/AOC2020-0.1.0.0/x/AOC2019/build/AOC2019/autogen/PackageInfo_AOC2020.hs	22;"	f
 copyright	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.4.6/AOC2020-0.1.0.0/build/autogen/PackageInfo_AOC2020.hs	22;"	f
@@ -247,8 +247,9 @@ day21	/home/alex800121/haskell/aoc/2019/src/Day21.hs	64;"	f
 day21a	/home/alex800121/haskell/aoc/2019/src/Day21.hs	37;"	f
 day21b	/home/alex800121/haskell/aoc/2019/src/Day21.hs	48;"	f
 day22	/home/alex800121/haskell/aoc/2019/src/Day22.hs	66;"	f
-day23	/home/alex800121/haskell/aoc/2019/src/Day23.hs	41;"	f
-day23a	/home/alex800121/haskell/aoc/2019/src/Day23.hs	33;"	f
+day23	/home/alex800121/haskell/aoc/2019/src/Day23.hs	56;"	f
+day23a	/home/alex800121/haskell/aoc/2019/src/Day23.hs	36;"	f
+day23b	/home/alex800121/haskell/aoc/2019/src/Day23.hs	44;"	f
 day24	/home/alex800121/haskell/aoc/2019/src/Day24.hs	3;"	f
 day25	/home/alex800121/haskell/aoc/2019/src/Day25.hs	3;"	f
 day3	/home/alex800121/haskell/aoc/2019/src/Day3.hs	40;"	f
@@ -492,7 +493,7 @@ toChar	/home/alex800121/haskell/aoc/2019/src/Day18.hs	114;"	f
 toVec	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	350;"	f
 twistKnotList	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	117;"	f
 ubToST	/home/alex800121/haskell/aoc/2019/src/OpCode.hs	87;"	f
-updateInput	/home/alex800121/haskell/aoc/2019/src/Day23.hs	26;"	f
+updateInput	/home/alex800121/haskell/aoc/2019/src/Day23.hs	28;"	f
 vTail	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	359;"	f
 vZipWith	/home/alex800121/haskell/aoc/2019/src/MyLib.hs	355;"	f
 version	/home/alex800121/haskell/aoc/2019/dist-newstyle/build/x86_64-linux/ghc-9.4.5/AOC2020-0.1.0.0/build/autogen/PackageInfo_AOC2020.hs	17;"	f
