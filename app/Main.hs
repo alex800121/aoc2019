@@ -50,7 +50,7 @@ main = do
   -- day19
   -- day20
   -- day21
-  day22
-  day23
-  day24
+  -- day22
+  -- day23
+  -- day24
   day25

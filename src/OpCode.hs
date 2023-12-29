@@ -12,17 +12,20 @@ module OpCode
     ubToST,
     mkUBOC,
     inputOpCode,
+    runIOOC
   )
 where
 
 import Control.Monad (void)
-import Control.Monad.ST.Strict (ST, runST)
 -- import Data.Map (Map)
 -- import qualified Data.Map as IM
 
+import Control.Monad.ST (stToIO)
+import Control.Monad.ST.Strict (RealWorld, ST, runST)
 import Data.DList (DList)
 import qualified Data.DList as DL
 import Data.Functor.Identity (Identity (Identity, runIdentity))
+import Data.IORef (IORef, newIORef, readIORef)
 import Data.IntMap (IntMap)
 import qualified Data.IntMap as IM
 import Data.List (uncons)
@@ -51,6 +54,8 @@ type UBOC = PrimOC Int (IntMap Integer) (DList Integer) Bool Identity
 -- type UBOC = PrimOC Integer (IntMap Integer) [Integer] Bool
 
 type STOC s = PrimOC Int (IntMap Integer) (DList Integer) Bool (STRef s)
+
+-- type IOOC = PrimOC Int (IntMap Integer) (DList Integer) Bool IORef
 
 readDefaultWith :: Integer -> STOC s -> Int -> ST s Integer
 readDefaultWith def oc i = do
@@ -94,6 +99,26 @@ ubToST (PrimOC a b c d e f) = do
   f' <- newSTRef $ runIdentity f
   return $ PrimOC a' b' c' d' e' f'
 
+-- ubToIO :: UBOC -> IO IOOC
+-- ubToIO (PrimOC a b c d e f) = do
+--   a' <- newIORef $ runIdentity a
+--   b' <- newIORef $ runIdentity b
+--   c' <- newIORef $ runIdentity c
+--   d' <- newIORef $ runIdentity d
+--   e' <- newIORef $ runIdentity e
+--   f' <- newIORef $ runIdentity f
+--   return $ PrimOC a' b' c' d' e' f'
+--
+-- ioToUB :: IOOC -> IO UBOC
+-- ioToUB (PrimOC a b c d e f) = do
+--   a' <- Identity <$> readIORef a
+--   b' <- Identity <$> readIORef b
+--   c' <- Identity <$> readIORef c
+--   d' <- Identity <$> readIORef d
+--   e' <- Identity <$> readIORef e
+--   f' <- Identity <$> readIORef f
+--   return $ PrimOC a' b' c' d' e' f'
+
 stToUB :: STOC s -> ST s UBOC
 stToUB (PrimOC a b c d e f) = do
   a' <- Identity <$> readSTRef a
@@ -112,6 +137,9 @@ runOpCodeWith f oc = runST $ do
   oc' <- ubToST oc
   f oc'
   stToUB oc'
+
+runIOOC :: STOC RealWorld -> IO ()
+runIOOC = stToIO . runSTOC
 
 runSTOC :: STOC s -> ST s ()
 runSTOC oc = do
