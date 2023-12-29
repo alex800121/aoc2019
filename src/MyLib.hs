@@ -9,7 +9,7 @@ module MyLib where
 
 import Control.Monad (guard, mplus)
 import Data.Bits (xor)
-import Data.Char (digitToInt, intToDigit, isHexDigit, ord, chr)
+import Data.Char (chr, digitToInt, intToDigit, isHexDigit, ord)
 import Data.Foldable (Foldable (foldr'), toList)
 import Data.List (delete, foldl', group, nub, tails, uncons)
 import Data.List.Split (chunksOf)
@@ -26,8 +26,9 @@ import Text.Megaparsec
 import Text.Megaparsec.Char (space)
 import Text.Megaparsec.Char.Lexer (decimal, signed)
 
-drawASCII :: Integral a => [a] -> String
+drawASCII :: (Integral a) => [a] -> String
 drawASCII = map (chr . fromIntegral)
+
 pickAnySplit :: [a] -> [(a, [a])]
 pickAnySplit = f id
   where
