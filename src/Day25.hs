@@ -5,9 +5,10 @@ import Control.Monad.ST (RealWorld, ST, stToIO)
 import Data.Char (chr, ord)
 import qualified Data.DList as DL
 import Data.Functor.Identity (Identity (..))
-import Data.List (subsequences)
+import Data.List (find, intercalate, isInfixOf, subsequences)
 import Data.Map (Map)
 import qualified Data.Map as Map
+import Data.Maybe (fromJust)
 import Data.STRef
 import MyLib (drawASCII)
 import OpCode
@@ -76,11 +77,13 @@ playGame oc = do
   stToIO $ writeSTRef (_output oc) DL.empty
   playGame oc
 
-dropItemOutput :: UBOC -> String -> String
-dropItemOutput g item = drawASCII . DL.toList . runIdentity . _output $ runOpCodeWith runSTOC g'
+dropItemOutput :: UBOC -> [String] -> String
+dropItemOutput g item = drawASCII . DL.toList . runIdentity . _output $ runOpCodeWith runSTOC g''
   where
-    input = DL.fromList . map (fromIntegral . ord) $ item ++ "\nnorth\n"
-    g' = g {_input = Identity input}
+    input = DL.fromList . map (fromIntegral . ord) $ intercalate "\n" (map ("drop " ++) item) ++ "\n"
+    input2 = DL.fromList . map (fromIntegral . ord) $ "north\n"
+    g' = runOpCodeWith runSTOC $ g {_input = Identity input}
+    g'' = g' {_input = Identity input2, _output = Identity DL.empty}
 
 day25 :: IO ()
 day25 = do
@@ -88,4 +91,9 @@ day25 = do
   input' <- stToIO $ ubToST input
   stToIO $ initGame input'
   g <- stToIO $ stToUB input'
-  undefined
+  putStrLn
+    . ("day25a: " ++)
+    . fromJust
+    . find ("complete" `isInfixOf`)
+    . Map.keys
+    $ foldr (\x acc -> Map.insertWith (<>) (dropItemOutput g x) [x] acc) Map.empty dropped
