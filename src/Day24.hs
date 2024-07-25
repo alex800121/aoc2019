@@ -3,14 +3,24 @@
 
 module Day24 where
 
+
+import Paths_AOC2019
 import Data.Array.IArray
+
 import Data.Array.Unboxed
+
 import Data.Bifunctor (Bifunctor (bimap))
+
 import Data.List (foldl')
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.Maybe (fromJust, fromMaybe, mapMaybe)
+
 import Debug.Trace (traceShow)
+
 import MyLib
 
 adjacent = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -118,7 +128,7 @@ day24 = do
           _ -> Just 0
       )
       . lines
-      <$> readFile "input/input24.txt"
+      <$> (getDataDir >>= readFile . (++ "/input/input24.txt"))
   -- <$> readFile "input/test24.txt"
   let a = Map.keys inputMap
       b = (minimum a, maximum a)

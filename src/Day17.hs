@@ -2,19 +2,34 @@
 
 module Day17 where
 
+
+import Paths_AOC2019
 import Control.Monad (guard)
+
 import Data.Bifunctor (Bifunctor (..))
+
 import Data.Char (chr, ord)
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import Data.IntMap (IntMap)
+
 import qualified Data.IntMap as IM
+
 import Data.List (inits, insert, intercalate, intersperse, nub, sort, stripPrefix, tails)
+
 import Data.List.Split (splitOn)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Debug.Trace (traceShow)
+
 import MyLib (Direction (..), drawASCII, drawMap)
+
 import OpCode
 
 l = [(0, 1), (0, -1), (0, 0), (1, 0), (-1, 0)]
@@ -81,7 +96,7 @@ drawOC =
 
 day17 :: IO ()
 day17 = do
-  oc <- readInput <$> readFile "input/input17.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input17.txt"))
   let rawInput = drawOC $ runOpCodeWith runSTOC oc
       input =
         drawMap

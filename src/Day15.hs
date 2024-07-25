@@ -2,13 +2,22 @@
 
 module Day15 where
 
+
+import Paths_AOC2019
 import Data.Bifunctor (Bifunctor (..))
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Debug.Trace (trace)
+
 import MyLib (drawGraph)
+
 import OpCode
 
 type Index = (Int, Int)
@@ -70,7 +79,7 @@ isOxygen = \case
 
 day15 :: IO ()
 day15 = do
-  input <- readInput <$> readFile "input/input15.txt"
+  input <- readInput <$> (getDataDir >>= readFile . (++ "/input/input15.txt"))
   let (a, b) =
         dfs
           Map.empty

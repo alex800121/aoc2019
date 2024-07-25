@@ -1,12 +1,20 @@
 {-# LANGUAGE TupleSections #-}
 module Day12 where
 
+
+import Paths_AOC2019
 import Data.List (foldl', transpose)
+
 import Data.Maybe (mapMaybe, catMaybes)
+
 import MyLib
+
 import Text.Megaparsec (parseMaybe, takeRest)
+
 import Text.Megaparsec.Char (string)
+
 import Data.Function (on)
+
 import Data.Bifunctor (bimap)
 
 -- <x=-4, y=-14, z=8>
@@ -63,7 +71,7 @@ day12b p = foldr lcm 1 $ mapMaybe pf p'
 
 day12 :: IO ()
 day12 = do
-  planets <- mapMaybe (parseMaybe parsePlanet) . lines <$> readFile "input/input12.txt"
+  planets <- mapMaybe (parseMaybe parsePlanet) . lines <$> (getDataDir >>= readFile . (++ "/input/input12.txt"))
   let xs = iterate movePlanets planets
   putStrLn
     . ("day12a: " ++)

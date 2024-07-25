@@ -1,8 +1,13 @@
 module Day3 where
 
+
+import Paths_AOC2019
 import Data.Bifunctor (first, second)
+
 import Data.List (delete, foldl', sort)
+
 import Data.List.Split (splitOn)
+
 import Data.Maybe (catMaybes)
 
 type Index = (Int, Int)
@@ -39,7 +44,7 @@ manhattan (a, b) (c, d) = abs (a - c) + abs (b - d)
 
 day3 :: IO ()
 day3 = do
-  l0 : l1 : _ <- map (drawLine . splitOn ",") . lines <$> readFile "input/input3.txt"
+  l0 : l1 : _ <- map (drawLine . splitOn ",") . lines <$> (getDataDir >>= readFile . (++ "/input/input3.txt"))
   let l = delete (0, 0) $ catMaybes [fst <$> intersect x y | x <- l0, y <- l1]
       l' = minimum $ catMaybes [(+) <$> calcDistance x l0 <*> calcDistance x l1 | x <- l]
   putStrLn

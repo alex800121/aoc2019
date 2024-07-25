@@ -50,11 +50,8 @@ data PrimOC i v j b f = PrimOC
   deriving (Show, Eq, Ord)
 
 type UBOC = PrimOC Int (IntMap Integer) (DList Integer) Bool Identity
-
 -- type UBOC = PrimOC Integer (IntMap Integer) [Integer] Bool
-
 type STOC s = PrimOC Int (IntMap Integer) (DList Integer) Bool (STRef s)
-
 -- type IOOC = PrimOC Int (IntMap Integer) (DList Integer) Bool IORef
 
 readDefaultWith :: Integer -> STOC s -> Int -> ST s Integer

@@ -2,13 +2,22 @@
 
 module Day23 where
 
+
+import Paths_AOC2019
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import Data.IntMap (IntMap)
+
 import qualified Data.IntMap as IM
+
 import Data.List.Split (chunksOf)
+
 import Debug.Trace (traceShow)
+
 import MyLib ((!?))
+
 import OpCode
 
 type GameState = IntMap UBOC
@@ -69,7 +78,7 @@ day23b g nat
 
 day23 :: IO ()
 day23 = do
-  oc <- readInput <$> readFile "input/input23.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input23.txt"))
   let initState = IM.fromList $ map (\x -> (x, inputOpCode [fromIntegral x] oc)) [0 .. 49]
   putStrLn
     . ("day23a: " ++)

@@ -1,10 +1,17 @@
 module Day6 where
 
+
+import Paths_AOC2019
 import Data.List.Split (splitOn)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.Maybe (fromMaybe)
+
 import Data.Set (Set)
+
 import qualified Data.Set as Set
 
 data Tree a = Tree {_name :: a, _level :: Int, _children :: [Tree a]} deriving (Eq, Ord, Show)
@@ -48,7 +55,7 @@ day6b a@(x : xs) b@(y : ys)
 day6 :: IO ()
 day6 = do
   -- orbit <- uncurry (buildOrbit 0) . parseInput <$> readFile "input/test6.txt"
-  orbit <- uncurry (buildOrbit 0) . parseInput <$> readFile "input/input6.txt"
+  orbit <- uncurry (buildOrbit 0) . parseInput <$> (getDataDir >>= readFile . (++ "/input/input6.txt"))
   putStrLn
     . ("day6a: " ++)
     . show

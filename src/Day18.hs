@@ -3,20 +3,36 @@
 
 module Day18 where
 
+
+import Paths_AOC2019
 import Control.Monad (join)
+
 import Data.Bifunctor (Bifunctor (..))
+
 import Data.Bits
+
 import Data.Char (chr, isLower, isUpper, ord, toLower, toUpper)
+
 import Data.List (elemIndex, find, findIndex, foldl')
+
 import Data.Map.Strict (Map)
+
 import qualified Data.Map.Strict as Map
+
 import Data.Maybe (isJust, mapMaybe)
+
 import Data.PQueue.Prio.Min (MinPQueue (..))
+
 import qualified Data.PQueue.Prio.Min as PQ
+
 import Data.Set (Set)
+
 import qualified Data.Set as Set
+
 import Data.Tuple (swap)
+
 import Debug.Trace (trace, traceShow)
+
 import MyLib (drawGraph, drawMap, pickAnySplit)
 
 data Block
@@ -146,7 +162,7 @@ dijkstra km finKeys visited q = case q of
 
 day18 :: IO ()
 day18 = do
-  (allKeys, m) <- readInput <$> readFile "input/input18.txt"
+  (allKeys, m) <- readInput <$> (getDataDir >>= readFile . (++ "/input/input18.txt"))
   let keys =
         Map.toList $
           Map.mapMaybe

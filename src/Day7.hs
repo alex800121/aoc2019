@@ -1,8 +1,13 @@
 module Day7 where
 
+
+import Paths_AOC2019
 import Data.List (foldl', permutations)
+
 import OpCode
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity(..))
 
 candidates = permutations [0 .. 4]
@@ -23,7 +28,7 @@ day7b input oc
 
 day7 :: IO ()
 day7 = do
-  oc <- readInput <$> readFile "input/input7.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input7.txt"))
   putStrLn
     . ("day7a: " ++)
     . show

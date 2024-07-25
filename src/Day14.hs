@@ -1,11 +1,19 @@
 module Day14 where
 
+
+import Paths_AOC2019
 import Data.List (foldl')
+
 import Data.List.Split (splitOn)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.Map.Merge.Strict
+
 import Data.Maybe (fromMaybe)
+
 import Debug.Trace
 
 type Reaction = Map String (Int, [(String, Int)])
@@ -73,7 +81,7 @@ binSearch reaction target l u
 
 day14 :: IO ()
 day14 = do
-  reaction <- Map.unions . map inputParser . lines <$> readFile "input/input14.txt"
+  reaction <- Map.unions . map inputParser . lines <$> (getDataDir >>= readFile . (++ "/input/input14.txt"))
   let remains = Map.singleton "FUEL"
       goal = "ORE"
   putStrLn

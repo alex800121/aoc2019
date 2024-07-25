@@ -2,14 +2,24 @@
 
 module Day10 where
 
+
+import Paths_AOC2019
 import Data.Bifunctor (Bifunctor (..))
+
 import Data.Foldable (maximumBy)
+
 import Data.Function (on)
+
 import Data.Map (keysSet)
+
 import Data.MultiSet (MultiSet)
+
 import qualified Data.MultiSet as MS
+
 import Data.Set (Set)
+
 import qualified Data.Set as Set
+
 import MyLib (drawMap)
 
 type Index = (Int, Int)
@@ -49,7 +59,7 @@ buildIndex' =
 
 day10 :: IO ()
 day10 = do
-  input <- lines <$> readFile "input/input10.txt"
+  input <- lines <$> (getDataDir >>= readFile . (++ "/input/input10.txt"))
   let m =
         keysSet
           . drawMap

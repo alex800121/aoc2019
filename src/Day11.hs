@@ -3,13 +3,14 @@
 module Day11 where
 
 import Data.Bifunctor (Bifunctor (bimap))
+import Data.DList qualified as DL
+import Data.Functor.Identity (Identity (..))
 import Data.Map (Map)
-import qualified Data.Map as Map
+import Data.Map qualified as Map
 import Data.Maybe (fromMaybe)
 import MyLib (Direction (..), drawGraph)
-import qualified Data.DList as DL
 import OpCode
-import Data.Functor.Identity (Identity(..))
+import Paths_AOC2019
 
 type Floor = Map Index Integer
 
@@ -36,7 +37,7 @@ run g@(G f o p@(x, y) d)
 
 day11 :: IO ()
 day11 = do
-  oc <- readInput <$> readFile "input/input11.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input11.txt"))
   putStrLn
     . ("day11a: " ++)
     . show
