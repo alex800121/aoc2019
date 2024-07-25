@@ -1,8 +1,13 @@
 module Day19 where
 
+
+import Paths_AOC2019
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import OpCode
+
 import Debug.Trace (traceShow)
 
 day19a oc =
@@ -25,7 +30,7 @@ day19b oc (x, y)
 
 day19 :: IO ()
 day19 = do
-  input <- readInput <$> readFile "input/input19.txt"
+  input <- readInput <$> (getDataDir >>= readFile . (++ "/input/input19.txt"))
   putStrLn
     . ("day19a: " ++)
     . show

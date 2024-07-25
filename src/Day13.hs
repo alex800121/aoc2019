@@ -2,16 +2,28 @@
 
 module Day13 where
 
+
+import Paths_AOC2019
 import Control.Monad.ST (ST, runST)
+
 import qualified Data.IntMap as IM
+
 import Data.List.Split (chunksOf)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.STRef (newSTRef, readSTRef, writeSTRef)
+
 import Debug.Trace (traceM)
+
 import MyLib
+
 import OpCode
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity(..))
 
 data Tile
@@ -67,7 +79,7 @@ loopSTOC cache oc = do
 
 day13 :: IO ()
 day13 = do
-  oc <- readInput <$> readFile "input/input13.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input13.txt"))
   let output :: Cabinet
       output =
         Map.fromList

@@ -1,5 +1,7 @@
 module Day16 where
 
+
+import Paths_AOC2019
 import Data.Char (digitToInt, intToDigit)
 
 p = [0, 1, 0, -1]
@@ -15,7 +17,7 @@ fastStep = scanr (\x acc -> (x + acc) `mod` 10) 0
 
 day16 :: IO ()
 day16 = do
-  input <- init <$> readFile "input/input16.txt"
+  input <- init <$> (getDataDir >>= readFile . (++ "/input/input16.txt"))
   let offset = read @Int $ take 7 input
       input' = map digitToInt input
   putStrLn
