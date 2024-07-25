@@ -1,7 +1,11 @@
 module Day8 where
 
+
+import Paths_AOC2019
 import Data.Foldable (Foldable (foldl'), minimumBy)
+
 import Data.Function (on)
+
 import Data.List.Split (chunksOf)
 
 tall = 6
@@ -10,7 +14,7 @@ wide = 25
 
 day8 :: IO ()
 day8 = do
-  input <- chunksOf (tall * wide) . init <$> readFile "input/input8.txt"
+  input <- chunksOf (tall * wide) . init <$> (getDataDir >>= readFile . (++ "/input/input8.txt"))
   putStrLn
     . ("day8a: " ++)
     . show

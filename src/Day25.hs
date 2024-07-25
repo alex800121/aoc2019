@@ -1,16 +1,29 @@
 module Day25 where
 
+
+import Paths_AOC2019
 import Control.Monad (forM_)
+
 import Control.Monad.ST (RealWorld, ST, stToIO)
+
 import Data.Char (chr, ord)
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import Data.List (find, intercalate, isInfixOf, subsequences)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.Maybe (fromJust)
+
 import Data.STRef
+
 import MyLib (drawASCII)
+
 import OpCode
 
 dropped = subsequences items
@@ -87,7 +100,7 @@ dropItemOutput g item = drawASCII . DL.toList . runIdentity . _output $ runOpCod
 
 day25 :: IO ()
 day25 = do
-  input <- readInput <$> readFile "input/input25.txt"
+  input <- readInput <$> (getDataDir >>= readFile . (++ "/input/input25.txt"))
   input' <- stToIO $ ubToST input
   stToIO $ initGame input'
   g <- stToIO $ stToUB input'

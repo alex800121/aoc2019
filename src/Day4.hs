@@ -1,6 +1,9 @@
 module Day4 where
 
+
+import Paths_AOC2019
 import Data.Char (digitToInt)
+
 import Data.List (group, partition)
 
 input = map (map digitToInt . show) [172930 .. 683082]

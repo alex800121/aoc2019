@@ -1,10 +1,17 @@
 module Day21 where
 
+
+import Paths_AOC2019
 import Data.Char (chr, ord)
+
 import qualified Data.DList as DL
+
 import Data.Functor.Identity (Identity (..))
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import OpCode
 
 data Instruction
@@ -63,7 +70,7 @@ printOutput (x : xs) = (if x > fromIntegral (ord maxBound) || x < fromIntegral (
 
 day21 :: IO ()
 day21 = do
-  oc <- readInput <$> readFile "input/input21.txt"
+  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input21.txt"))
   putStrLn
     . ("day21a: " ++)
     . show

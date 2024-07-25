@@ -2,16 +2,28 @@
 
 module Day20 where
 
+
+import Paths_AOC2019
 import Data.Bifunctor (Bifunctor (..))
+
 import Data.Char (toLower)
+
 import Data.List (sort)
+
 import Data.Map (Map)
+
 import qualified Data.Map as Map
+
 import Data.Maybe (fromJust, isJust)
+
 import qualified Data.PQueue.Prio.Min as Q
+
 import Data.Set (Set)
+
 import qualified Data.Set as Set
+
 import Debug.Trace (traceShow)
+
 import MyLib (drawGraph, drawMap)
 
 data Block a
@@ -129,7 +141,7 @@ adjacent = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 day20 :: IO ()
 day20 = do
   -- (donut, portal) <- readInput <$> readFile "input/test20.txt"
-  (donut, portal) <- readInput <$> readFile "input/input20.txt"
+  (donut, portal) <- readInput <$> (getDataDir >>= readFile . (++ "/input/input20.txt"))
   let fin = (`notElem` ["AA", "ZZ"]) . _name
       pin = Map.map (filter (fin . snd)) $ Map.filterWithKey (\k _ -> fin k) portal
       fout x = _io x == Inner || _name x `elem` ["AA", "ZZ"]

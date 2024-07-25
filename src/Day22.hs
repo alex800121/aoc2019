@@ -3,13 +3,22 @@
 
 module Day22 where
 
+
+import Paths_AOC2019
 import Data.Finite
+
 import Data.Foldable (Foldable (..))
+
 import Data.Group
+
 import Data.Kind (Type)
+
 import Data.List (elemIndex, findIndex, sort)
+
 import Data.Semigroup (Semigroup (..))
+
 import GHC.TypeLits (Natural)
+
 import GHC.TypeNats (KnownNat)
 
 newtype Perm (f :: Natural -> Type) n = Perm {applyPerm :: f n -> f n}
@@ -65,7 +74,7 @@ mergeInstruction = mconcat . reverse
 
 day22 :: IO ()
 day22 = do
-  input <- lines <$> readFile "input/input22.txt"
+  input <- lines <$> (getDataDir >>= readFile . (++ "/input/input22.txt"))
   let permA = mergeInstruction $ map readAffine input
       permB = invert $ stimes shuffleTime $ mergeInstruction $ map readAffine input
   putStrLn
