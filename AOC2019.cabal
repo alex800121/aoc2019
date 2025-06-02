@@ -25,6 +25,7 @@ common shared
     default-language: GHC2021
     build-depends:
         base,
+        parallel,
         megaparsec,
         parser-combinators,
         transformers,
@@ -81,6 +82,19 @@ library
     -- other-extensions:
     hs-source-dirs:   src, app
 
+benchmark main-bench
+    type: exitcode-stdio-1.0
+    hs-source-dirs:      benchmark
+    main-is:             AOCBench.hs
+    build-depends:    
+        base,
+        criterion,
+        AOC2019,
+        AOC
+    default-language:    GHC2021
+    -- ghc-options: -O2 
+    -- ghc-options: -O2 -threaded
+    ghc-options: -O2 -threaded -rtsopts "-with-rtsopts=-N -T"
 
 executable AOC2019
     import: shared
@@ -123,3 +137,4 @@ executable AOC2019
     --     AOC2020
     
     hs-source-dirs:   app, src
+    ghc-options: -O2 -threaded -rtsopts "-with-rtsopts=-N -T"
