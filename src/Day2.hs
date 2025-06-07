@@ -1,39 +1,33 @@
 module Day2 where
 
-
+import Control.Monad.ST.Strict (runST)
+import Data.Vector.Unboxed.Mutable qualified as MV
+import IntCode (IntCode (..), fromPure, readPure, runIntCode, toPure)
 import Paths_AOC2019
-import Data.List.Split (splitOn)
-import Data.Vector.Unboxed (fromList)
-import qualified Data.Vector.Unboxed as U
-import Data.IntMap (IntMap)
-import qualified Data.IntMap as IM
-import Data.Map (Map)
--- import qualified Data.Map as IM
-import OpCode
-import Data.Functor.Identity (Identity(..))
 
--- type IntMap = Map Integer
-target = 19690720
+day2a v noun verb =
+  runST
+    ( fromPure v
+        >>= (\ic -> MV.write (_code ic) 1 noun >> MV.write (_code ic) 2 verb >> pure ic)
+        >>= runIntCode
+        >>= (`MV.read` 0) . _code
+    )
+
+day2b v =
+  [ 100 * noun + verb
+    | noun <- [0 .. 99],
+      verb <- [0 .. 99],
+      day2a v noun verb == 19690720
+  ]
 
 day2 :: IO ()
 day2 = do
-  v <- readInput <$> (getDataDir >>= readFile . (++ "/input/input2.txt"))
-  let v' = v { _vector = Identity $ IM.insert 1 12 $ IM.insert 2 2 (runIdentity $ _vector v) }
-      x = runOpCodeWith runSTOC v'
-      f = (IM.! 0) . runIdentity . _vector
-      v'' =
-        [ a * 100 + b
-          | a <- [0 .. 99],
-            b <- [0 .. 99],
-            let c = v { _vector = Identity $ IM.insert 1 a $ IM.insert 2 b (runIdentity $ _vector v) },
-            target == f (runOpCodeWith runSTOC c)
-        ]
+  v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input2.txt"))
   putStrLn
     . ("day2a: " ++)
     . show
-    . f
-    $ x
+    $ day2a v 12 2
   putStrLn
     . ("day2b: " ++)
     . show
-    $ v''
+    $ day2b v

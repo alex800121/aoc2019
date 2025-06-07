@@ -26,6 +26,7 @@ common shared
     build-depends:
         base,
         parallel,
+        queues,
         megaparsec,
         parser-combinators,
         transformers,
@@ -47,7 +48,7 @@ common shared
 library
     import: shared
     exposed-modules:
-        OpCode,
+        IntCode,
         Day1,
         Day2,
         Day3,
@@ -129,7 +130,7 @@ executable AOC2019
         Day23,
         Day24,
         Day25,
-        OpCode
+        IntCode
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

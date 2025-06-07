@@ -2,25 +2,16 @@
 
 module Day10 where
 
-
-import Paths_AOC2019
 import Data.Bifunctor (Bifunctor (..))
-
 import Data.Foldable (maximumBy)
-
 import Data.Function (on)
-
 import Data.Map (keysSet)
-
 import Data.MultiSet (MultiSet)
-
-import qualified Data.MultiSet as MS
-
+import Data.MultiSet qualified as MS
 import Data.Set (Set)
-
-import qualified Data.Set as Set
-
+import Data.Set qualified as Set
 import MyLib (drawMap)
+import Paths_AOC2019
 
 type Index = (Int, Int)
 

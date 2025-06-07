@@ -1,20 +1,13 @@
 module Day14 where
 
-
-import Paths_AOC2019
 import Data.List (foldl')
-
 import Data.List.Split (splitOn)
-
 import Data.Map (Map)
-
-import qualified Data.Map as Map
-
+import Data.Map qualified as Map
 import Data.Map.Merge.Strict
-
 import Data.Maybe (fromMaybe)
-
 import Debug.Trace
+import Paths_AOC2019
 
 type Reaction = Map String (Int, [(String, Int)])
 

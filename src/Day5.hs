@@ -1,35 +1,25 @@
 module Day5 where
 
-
+import Control.Monad.ST.Strict (runST)
+import Data.Functor ((<&>))
+import Data.Foldable (find)
+import IntCode
 import Paths_AOC2019
-import Data.List.Split (splitOn)
+import Queue qualified as Q
 
-import Data.Vector.Unboxed (fromList)
-
-import OpCode 
-
-import Data.DList (toList, singleton)
-
-import Data.Functor.Identity (Identity(..))
+day5a v i = runST ((fromPure v' >>= runIntCode) <&> _output)
+  where
+    v' = v {_pureInput = Q.fromList [i]}
 
 day5 :: IO ()
 day5 = do
-  input <- readInput <$> (getDataDir >>= readFile . (++ "/input/input5.txt"))
-  let day5a = runOpCodeWith runSTOC $ input { _input = Identity $ singleton 1 }
-      day5b = runOpCodeWith runSTOC $ input { _input = Identity $ singleton 5 }
+  v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input5.txt"))
   putStrLn
-    . ("day5a: " ++)
+    . ("day5a:" <>)
     . show
-    . last
-    . toList
-    . runIdentity
-    . _output
-    $ day5a
+    . find (/= 0)
+    $ day5a v 1
   putStrLn
-    . ("day5b: " ++)
+    . ("day5a:" <>)
     . show
-    . last
-    . toList
-    . runIdentity
-    . _output
-    $ day5b
+    $ day5a v 5

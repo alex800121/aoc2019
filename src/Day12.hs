@@ -1,36 +1,23 @@
-{-# LANGUAGE TupleSections #-}
 module Day12 where
 
-
-import Paths_AOC2019
-import Data.List (foldl', transpose)
-
-import Data.Maybe (mapMaybe, catMaybes)
-
+import Control.Parallel.Strategies
+import Data.Bifunctor (bimap)
+import Data.List (foldl')
+import Data.Maybe (catMaybes, fromMaybe, mapMaybe)
+import Data.Vector.Unboxed (Vector)
+import Data.Vector.Unboxed qualified as V
+import Data.Vector.Unboxed.Mutable qualified as M
+import Debug.Trace
 import MyLib
-
+import Paths_AOC2019
 import Text.Megaparsec (parseMaybe, takeRest)
-
 import Text.Megaparsec.Char (string)
 
-import Data.Function (on)
+type Axis = Vector (Int, Int)
 
-import Data.Bifunctor (bimap)
+type Planets = [Axis]
 
--- <x=-4, y=-14, z=8>
--- <x=1, y=-8, z=10>
--- <x=-15, y=2, z=1>
--- <x=-17, y=-17, z=16>
-
-type Index = [Int]
-
-type Velo = Index
-
-type Pos = Index
-
-type Planet = (Pos, Velo)
-
-parsePlanet :: Parser Planet
+parsePlanet :: Parser Planets
 parsePlanet = do
   string "<x="
   x <- signedInteger
@@ -39,48 +26,50 @@ parsePlanet = do
   string ", z="
   z <- signedInteger
   takeRest
-  let a = [0, 0, 0]
-  return ([x, y, z], a)
+  pure $ map (V.fromList . pure) [(x, 0), (y, 0), (z, 0)]
 
-movePlanets :: [Planet] -> [Planet]
-movePlanets s = do
-  ((x, v0), xs) <- pickAnySplit s
-  let v1 =
-        foldl'
-          ( \a (d, _) ->
-              let f' g h = case compare g h of
-                    EQ -> id
-                    LT -> subtract 1
-                    GT -> (+ 1)
-               -- in (f' d x a, f' e y b, f' f z c)
-               in zipWith ($) (zipWith f' d x) a
-          )
-          v0
-          xs
-  return (zipWith (+) x v1, v1)
+moveAxis v =
+  V.modify
+    ( \mv ->
+        let (x0, v0) = v V.! 0
+            (x1, v1) = v V.! 1
+            (x2, v2) = v V.! 2
+            (x3, v3) = v V.! 3
+            v0' = v0 + signum (x1 - x0) + signum (x2 - x0) + signum (x3 - x0)
+            v1' = v1 + signum (x0 - x1) + signum (x2 - x1) + signum (x3 - x1)
+            v2' = v2 + signum (x1 - x2) + signum (x0 - x2) + signum (x3 - x2)
+            v3' = v3 + signum (x1 - x3) + signum (x2 - x3) + signum (x0 - x3)
+            x0' = x0 + v0'
+            x1' = x1 + v1'
+            x2' = x2 + v2'
+            x3' = x3 + v3'
+         in M.write mv 0 (x0', v0') >> M.write mv 1 (x1', v1') >> M.write mv 2 (x2', v2') >> M.write mv 3 (x3', v3')
+    )
+    v
 
-energy :: Planet -> Int
-energy (x, a) = product $ map (sum . map abs) [x, a]
+energy = V.sum . V.map (uncurry (*)) . foldl' (V.zipWith (\(a, b) (c, d) -> (a + abs c, b + abs d))) (V.replicate 4 (0, 0))
 
-day12b :: [Planet] -> Int
-day12b p = foldr lcm 1 $ mapMaybe pf p'
+findZero f n x = if V.all ((== 0) . snd) x' then 2 * n else findZero f (succ n) x'
   where
-    p' :: [[Planet]]
-    p' = map (map ((, [0]) . pure)) $ transpose $ map fst p
-    pf = fmap fst . firstRepeat' . iterate movePlanets
+    x' = f x
+
+day12b = foldl' lcm 1 . parMap rpar (findZero moveAxis 1)
 
 day12 :: IO ()
 day12 = do
-  planets <- mapMaybe (parseMaybe parsePlanet) . lines <$> (getDataDir >>= readFile . (++ "/input/input12.txt"))
-  let xs = iterate movePlanets planets
+  planets <-
+    foldl' (zipWith (<>)) (replicate 3 V.empty)
+      . mapMaybe (parseMaybe parsePlanet)
+      . lines
+      <$> (getDataDir >>= readFile . (++ "/input/input12.txt"))
+  let xs = iterate (map moveAxis) planets
   putStrLn
     . ("day12a: " ++)
     . show
-    . sum
-    . map energy
+    . energy
     . (!! 1000)
     $ xs
   putStrLn
-    . ("day12a: " ++)
+    . ("day12b: " ++)
     . show
     $ day12b planets

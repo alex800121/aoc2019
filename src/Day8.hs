@@ -1,12 +1,9 @@
 module Day8 where
 
-
-import Paths_AOC2019
 import Data.Foldable (Foldable (foldl'), minimumBy)
-
 import Data.Function (on)
-
 import Data.List.Split (chunksOf)
+import Paths_AOC2019
 
 tall = 6
 

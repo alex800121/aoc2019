@@ -1,14 +1,10 @@
 module Day3 where
 
-
-import Paths_AOC2019
 import Data.Bifunctor (first, second)
-
 import Data.List (delete, foldl', sort)
-
 import Data.List.Split (splitOn)
-
 import Data.Maybe (catMaybes)
+import Paths_AOC2019
 
 type Index = (Int, Int)
 

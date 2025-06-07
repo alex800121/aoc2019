@@ -1,41 +1,40 @@
 module Day7 where
 
-
+import Control.Monad (foldM, join, replicateM, (<=<))
+import Control.Monad.ST.Strict (runST)
+import Data.List (permutations)
+import IntCode
 import Paths_AOC2019
-import Data.List (foldl', permutations)
+import Queue (Queue (..))
+import Queue qualified as Q
 
-import OpCode
+inputA = permutations [0 .. 4]
 
-import qualified Data.DList as DL
+inputB = permutations [5 .. 9]
 
-import Data.Functor.Identity (Identity(..))
+day7a v i = runST $ do
+  xs <- mapM (fromPure . (\a b -> a {_pureInput = Q.singleton b}) v) i
+  foldM (\i x -> _output <$> runIntCode (x {_input = _input x <> i})) (Q.singleton 0) xs
 
-candidates = permutations [0 .. 4]
-candidates' = permutations [5 .. 9]
-
-day7a :: DL.DList Integer -> UBOC -> Integer
-day7a input oc = foldl' (\acc x -> DL.head (runIdentity $ _output (runOpCodeWith runSTOC (oc {_input = Identity $ DL.fromList [x, acc]})))) 0 input
-
-day7b :: [[Integer]] -> [UBOC] -> [[Integer]]
-day7b input oc
-  | all (runIdentity . _halt) runOC = output
-  | otherwise = day7b input' runOC
+day7b v i = runST $ do
+  xs <- mapM (fromPure . (\a b -> a {_pureInput = Q.singleton b}) v) i
+  f (Q.fromList xs) (Q.singleton 0)
   where
-    ocStart = zipWith (\x y -> x {_input = Identity (runIdentity (_input x) `DL.append` DL.fromList y), _output = Identity DL.empty}) oc input
-    runOC = map (runOpCodeWith runSTOC) ocStart
-    output = map (DL.toList . runIdentity . _output) runOC
-    input' = last output : init output
+    f Empty _ = pure Nothing
+    f (Full x xs) i
+      | _halt x = pure (Just i)
+      | otherwise = runIntCode (x {_input = _input x <> i}) >>= \x' -> f (Q.enqueue (x' {_output = Q.empty}) xs) (_output x')
 
 day7 :: IO ()
 day7 = do
-  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input7.txt"))
+  v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input7.txt"))
   putStrLn
     . ("day7a: " ++)
     . show
     . maximum
-    $ map ((`day7a` oc) . DL.fromList) candidates
+    $ map (fmap fst . Q.dequeue . day7a v) inputA
   putStrLn
     . ("day7b: " ++)
     . show
     . maximum
-    $ map (head . last . (`day7b` repeat oc) . (\x -> (head x : [0]) : map (:[]) (tail x))) candidates'
+    $ map (fmap fst . Q.dequeue <=< day7b v) inputB

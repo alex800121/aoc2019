@@ -1,18 +1,12 @@
 module Day6 where
 
-
-import Paths_AOC2019
 import Data.List.Split (splitOn)
-
 import Data.Map (Map)
-
-import qualified Data.Map as Map
-
+import Data.Map qualified as Map
 import Data.Maybe (fromMaybe)
-
 import Data.Set (Set)
-
-import qualified Data.Set as Set
+import Data.Set qualified as Set
+import Paths_AOC2019
 
 data Tree a = Tree {_name :: a, _level :: Int, _children :: [Tree a]} deriving (Eq, Ord, Show)
 

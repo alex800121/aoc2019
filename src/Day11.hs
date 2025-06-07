@@ -1,58 +1,54 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE PatternSynonyms #-}
 
 module Day11 where
 
-import Data.Bifunctor (Bifunctor (bimap))
-import Data.DList qualified as DL
-import Data.Functor.Identity (Identity (..))
-import Data.Map (Map)
-import Data.Map qualified as Map
-import Data.Maybe (fromMaybe)
-import MyLib (Direction (..), drawGraph)
-import OpCode
+import Control.Monad.ST.Strict (runST)
+import Data.Bifunctor (Bifunctor (..))
+import Data.Map.Strict (Map)
+import Data.Map.Strict qualified as Map
+import MyLib (Direction (..), drawGraph, toIndex)
+import IntCode
 import Paths_AOC2019
-
-type Floor = Map Index Integer
+import Queue qualified as Q
 
 type Index = (Int, Int)
 
-data GameState = G {_floor :: Floor, _oc :: UBOC, _pos :: Index, _dir :: Direction} deriving (Show, Eq)
+type Floor = Map Index Bool
 
-run :: GameState -> GameState
-run g@(G f o p@(x, y) d)
-  | runIdentity $ _halt o = g
-  | otherwise = run g'
+pattern White = True
+
+pattern Black = True
+
+paint :: PureIntCode -> Floor -> Floor
+paint v fl = runST $ do
+  ic <- fromPure v
+  f ic (0, 0) North fl
   where
-    g' = G f' o' p' d'
-    input = fromIntegral $ fromMaybe 0 (f Map.!? p)
-    o' = runOpCodeWith runSTOC (o {_input = Identity $ DL.singleton input})
-    turn : paint : _ = reverse $ DL.toList $ runIdentity $ _output o'
-    f' = Map.insert p paint f
-    d' = (if turn == 0 then pred else succ) d
-    p' = bimap (+ x) (+ y) $ case d' of
-      North -> (0, -1)
-      East -> (1, 0)
-      South -> (0, 1)
-      West -> (-1, 0)
+    f ic i d fl
+      | _halt ic = pure fl
+      | otherwise = do
+          ico <- runIntCode ici
+          let [a, b] = Q.toList (_output ico)
+              fl' = Map.insert i (a == 1) fl
+              d' = if b == 0 then pred d else succ d
+              i' = bimap (+ fst i) (+ snd i) (toIndex d')
+              ic' = ico {_output = Q.empty}
+          f ic' i' d' fl'
+      where
+        c = if Just White == fl Map.!? i then 1 else 0
+        ici = ic {_input = Q.singleton c}
 
 day11 :: IO ()
 day11 = do
-  oc <- readInput <$> (getDataDir >>= readFile . (++ "/input/input11.txt"))
+  v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input11.txt"))
   putStrLn
     . ("day11a: " ++)
     . show
-    . length
-    . _floor
-    . run
-    $ G Map.empty oc (0, 0) North
+    . Map.size
+    $ paint v Map.empty
   putStrLn
     . ("day11b: \n" ++)
     . unlines
-    . drawGraph
-      ( \case
-          Just 1 -> '#'
-          _ -> ' '
-      )
-    . _floor
-    . run
-    $ G (Map.singleton (0, 0) 1) oc (0, 0) North
+    . drawGraph (\case Just True -> '#'; _ -> ' ')
+    $ paint v (Map.singleton (0, 0) True)
