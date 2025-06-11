@@ -5,21 +5,22 @@ import Data.Functor ((<&>))
 import Data.Foldable (find)
 import IntCode
 import Paths_AOC2019
-import Queue qualified as Q
+-- import Queue qualified as Q
+import Data.Sequence qualified as S
 
 day5a v i = runST ((fromPure v' >>= runIntCode) <&> _output)
   where
-    v' = v {_pureInput = Q.fromList [i]}
+    v' = v {_pureInput = S.fromList [i]}
 
 day5 :: IO ()
 day5 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input5.txt"))
   putStrLn
-    . ("day5a:" <>)
+    . ("day5a: " <>)
     . show
     . find (/= 0)
     $ day5a v 1
   putStrLn
-    . ("day5a:" <>)
+    . ("day5b: " <>)
     . show
     $ day5a v 5

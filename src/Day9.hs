@@ -5,11 +5,12 @@ import Data.Functor ((<&>))
 import Debug.Trace (traceM)
 import IntCode
 import Paths_AOC2019
-import Queue qualified as Q
+-- import Queue qualified as Q
+import Data.Sequence qualified as S
 
 day9a v i = runST $ do
   x <- fromPure v
-  runIntCode (x {_input = Q.singleton i}) <&> _output
+  runIntCode (x {_input = S.singleton i}) <&> _output
 
 day9 :: IO ()
 day9 = do

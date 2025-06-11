@@ -1,15 +1,15 @@
 module Day16 where
 
 import Control.Parallel.Strategies
+import Data.Bits
 import Data.Char (digitToInt, intToDigit)
 import Data.Finite
 import Data.List (tails)
+import Data.Vector.Unboxed (Vector)
+import Data.Vector.Unboxed qualified as V
 import Debug.Trace (traceShow)
 import MyLib (extEuc)
 import Paths_AOC2019
-import Data.Vector.Unboxed (Vector)
-import Data.Vector.Unboxed qualified as V
-import Data.Bits
 
 p = [0, 1, 0, -1]
 

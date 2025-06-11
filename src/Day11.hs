@@ -10,7 +10,8 @@ import Data.Map.Strict qualified as Map
 import MyLib (Direction (..), drawGraph, toIndex)
 import IntCode
 import Paths_AOC2019
-import Queue qualified as Q
+import Data.Sequence qualified as S
+import Data.Foldable (toList)
 
 type Index = (Int, Int)
 
@@ -29,15 +30,15 @@ paint v fl = runST $ do
       | _halt ic = pure fl
       | otherwise = do
           ico <- runIntCode ici
-          let [a, b] = Q.toList (_output ico)
+          let [a, b] = toList (_output ico)
               fl' = Map.insert i (a == 1) fl
               d' = if b == 0 then pred d else succ d
               i' = bimap (+ fst i) (+ snd i) (toIndex d')
-              ic' = ico {_output = Q.empty}
+              ic' = ico {_output = S.empty}
           f ic' i' d' fl'
       where
         c = if Just White == fl Map.!? i then 1 else 0
-        ici = ic {_input = Q.singleton c}
+        ici = ic {_input = S.singleton c}
 
 day11 :: IO ()
 day11 = do

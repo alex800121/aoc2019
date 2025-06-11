@@ -55,8 +55,8 @@ buildTarget reaction goal remains
 
 binSearch :: Reaction -> Int -> Int -> Int -> Int
 binSearch reaction target l u
-  -- \| traceShow ((l, l'), (u, u')) False = undefined
-  | l == u - 1 && l' < target && target < u' = l'
+  -- | traceShow (l, u) False = undefined
+  | l == u - 1 && l' < target && target < u' = l
   | u' < target = binSearch reaction target u (d * 2 + u)
   | u' == target = u
   | m' < target && target < u' = binSearch reaction target m u
@@ -83,6 +83,6 @@ day14 = do
     . (Map.! "ORE")
     $ buildTarget reaction goal (remains 1)
   putStrLn
-    . ("day14a: " ++)
+    . ("day14b: " ++)
     . show
     $ binSearch reaction 1000000000000 1 256

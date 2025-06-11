@@ -2,29 +2,18 @@
 
 module Day20 where
 
-
-import Paths_AOC2019
 import Data.Bifunctor (Bifunctor (..))
-
 import Data.Char (toLower)
-
 import Data.List (sort)
-
 import Data.Map (Map)
-
-import qualified Data.Map as Map
-
+import Data.Map qualified as Map
 import Data.Maybe (fromJust, isJust)
-
-import qualified Data.PQueue.Prio.Min as Q
-
+import Data.PQueue.Prio.Min qualified as Q
 import Data.Set (Set)
-
-import qualified Data.Set as Set
-
+import Data.Set qualified as Set
 import Debug.Trace (traceShow)
-
 import MyLib (drawGraph, drawMap)
+import Paths_AOC2019
 
 data Block a
   = Space
@@ -104,10 +93,11 @@ dijkstra' pin pout fin visited q = case q of
           GT -> Map.empty
           EQ -> pout
           _ -> pin
-        level' = level + case io of
-          Inner -> 1
-          Outer -> -1
-        next = filter ((`Set.notMember` visited') . snd) $ maybe [] (map (bimap (+ (len + 1)) (level', ))) (p Map.!? Portal (succ io) x)
+        level' =
+          level + case io of
+            Inner -> 1
+            Outer -> -1
+        next = filter ((`Set.notMember` visited') . snd) $ maybe [] (map (bimap (+ (len + 1)) (level',))) (p Map.!? Portal (succ io) x)
         q'' = Q.union (Q.fromList next) q'
      in dijkstra' pin pout fin visited' q''
 
@@ -134,7 +124,7 @@ bfs d visited next len m
                   s
           )
           adjacent
-    m' = map ((len , ) . snd) (Set.toList p) ++ m
+    m' = map ((len,) . snd) (Set.toList p) ++ m
 
 adjacent = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
