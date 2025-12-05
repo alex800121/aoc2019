@@ -24,15 +24,16 @@ day2b v =
     (\(x, y) -> if day2a v x y == 19690720 then Just (100 * x + y) else Nothing)
     [(noun, verb) | noun <- [0 .. 99], verb <- [0 .. 99]]
 
-day2 :: IO ()
+day2 :: IO (String, String)
 day2 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input2.txt"))
-  putStrLn
-    . ("day2a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ day2a v 12 2
-  putStrLn
-    . ("day2b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     . catMaybes
     $ day2b v
+  pure (finalAnsa, finalAnsb)

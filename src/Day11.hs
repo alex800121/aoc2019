@@ -40,16 +40,18 @@ paint v fl = runST $ do
         c = if Just White == fl Map.!? i then 1 else 0
         ici = ic {_input = S.singleton c}
 
-day11 :: IO ()
+day11 :: IO (String, String)
 day11 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input11.txt"))
-  putStrLn
-    . ("day11a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . Map.size
     $ paint v Map.empty
-  putStrLn
-    . ("day11b: \n" ++)
+  let
+   !finalAnsb
+    = ('\n' :)
     . unlines
     . drawGraph (\case Just True -> '#'; _ -> ' ')
     $ paint v (Map.singleton (0, 0) True)
+  pure (finalAnsa, finalAnsb)

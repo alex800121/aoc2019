@@ -16,18 +16,19 @@ inc = uncurry (<=)
 eq :: (Eq a) => (a, a) -> Bool
 eq = uncurry (==)
 
-day4 :: IO ()
+day4 :: IO (String, String)
 day4 = do
-  putStrLn
-    . ("day4a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . length
     . filter ((&&) <$> all inc . pairs <*> any eq . pairs)
     $ input
 
-  putStrLn
-    . ("day4b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     . length
     . filter ((&&) <$> all inc . pairs <*> any ((== 2) . length) . group)
     $ input
+  pure (finalAnsa, finalAnsb)

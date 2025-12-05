@@ -131,7 +131,7 @@ fixInput a = a I.// ys
     xs :: UArray Index Char = drawArray ["@#=", "###", ">#?"]
     ys = [((a + cx - 1, b + cy - 1), c) | ((a, b), c) <- I.assocs xs]
 
-day18 :: IO ()
+day18 :: IO (String, String)
 day18 = do
   input :: UArray Index Char <- drawArray . lines <$> (getDataDir >>= readFile . (++ "/input/input18.txt"))
   let !inputA :: UArray Index Word64 = readInput (\_ _ _ ne -> ne) input
@@ -141,11 +141,12 @@ day18 = do
       !startB = (foldl' setBit 0 [26 .. 29] :: Word64, allKeys)
       a = par b $ dijkstra' inputA (IM.singleton (toInt startA) 0) (Q.singleton 0 startA)
       b = dijkstra inputB (IM.singleton (toInt startB) 0) (Q.singleton 0 startB)
-  putStrLn
-    . ("day18a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ a
-  putStrLn
-    . ("day18b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ b
+  pure (finalAnsa, finalAnsb)

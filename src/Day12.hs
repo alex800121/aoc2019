@@ -55,7 +55,7 @@ findZero f n x = if V.all ((== 0) . snd) x' then 2 * n else findZero f (succ n) 
 
 day12b = foldl' lcm 1 . parMap rpar (findZero moveAxis 1)
 
-day12 :: IO ()
+day12 :: IO (String, String)
 day12 = do
   planets <-
     foldl' (zipWith (<>)) (replicate 3 V.empty)
@@ -63,13 +63,14 @@ day12 = do
       . lines
       <$> (getDataDir >>= readFile . (++ "/input/input12.txt"))
   let xs = iterate (map moveAxis) planets
-  putStrLn
-    . ("day12a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . energy
     . (!! 1000)
     $ xs
-  putStrLn
-    . ("day12b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ day12b planets
+  pure (finalAnsa, finalAnsb)

@@ -48,7 +48,7 @@ buildIndex' =
     )
     Set.empty
 
-day10 :: IO ()
+day10 :: IO (String, String)
 day10 = do
   input <- lines <$> (getDataDir >>= readFile . (++ "/input/input10.txt"))
   let m =
@@ -70,13 +70,14 @@ day10 = do
         (\(x, y) -> 100 * x + y)
           . uncurry (\(a, b) (c, d) -> (a + c, b + d))
           $ fmap (snd . _index' . Set.elemAt 199 . buildIndex') day10a
-  putStrLn
-    . ("day10a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . MS.distinctSize
     . snd
     $ day10a
-  putStrLn
-    . ("day10b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ day10b
+  pure (finalAnsa, finalAnsb)

@@ -46,16 +46,17 @@ day6b a@(x : xs) b@(y : ys)
   | x == y = day6b xs ys
   | otherwise = length a + length b
 
-day6 :: IO ()
+day6 :: IO (String, String)
 day6 = do
   -- orbit <- uncurry (buildOrbit 0) . parseInput <$> readFile "input/test6.txt"
   orbit <- uncurry (buildOrbit 0) . parseInput <$> (getDataDir >>= readFile . (++ "/input/input6.txt"))
-  putStrLn
-    . ("day6a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . countChildren
     $ orbit
-  putStrLn
-    . ("day6b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ day6b (head $ findParent orbit "SAN") (head $ findParent orbit "YOU")
+  pure (finalAnsa, finalAnsb)

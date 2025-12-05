@@ -93,7 +93,7 @@ plus input = IA.accumArray (||) False bPlus [((0, i), x) | (i, x) <- IA.assocs i
     r2 = r `div` 2
     bPlus = bimap (-r2,) (r2,) (IA.bounds input)
 
-day24 :: IO ()
+day24 :: IO (String, String)
 day24 = do
   input <-
     IA.ixmap ((-2, -2), (2, 2)) (\(a, b) -> (a + 2, b + 2))
@@ -101,16 +101,17 @@ day24 = do
       . drawArray @UArray
       . lines
       <$> (getDataDir >>= readFile . (++ "/input/input24.txt"))
-  putStrLn
-    . ("day24a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . fmap (bioRating . snd)
     . firstRepeat'
     $ iterate (step adjArr) input
-  putStrLn
-    . ("day24a: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     . length
     . filter snd
     . IA.assocs
     $ iterate (step adjArrPlus) (plus input) !! 200
+  pure (finalAnsa, finalAnsb)

@@ -128,7 +128,7 @@ bfs d visited next len m
 
 adjacent = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
-day20 :: IO ()
+day20 :: IO (String, String)
 day20 = do
   -- (donut, portal) <- readInput <$> readFile "input/test20.txt"
   (donut, portal) <- readInput <$> (getDataDir >>= readFile . (++ "/input/input20.txt"))
@@ -138,13 +138,14 @@ day20 = do
       pout = Map.filterWithKey (\k a -> fout k && not (null a)) $ Map.map (filter (fout . snd)) portal
   -- print donut
   -- print $ portal
-  putStrLn
-    . ("day20a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ dijkstra portal "ZZ" (Set.singleton "AA") (Q.fromList $ portal Map.! Portal Outer "AA")
   -- print pin
   -- print pout
-  putStrLn
-    . ("day20b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ dijkstra' pin pout "ZZ" (Set.singleton (0, Portal Outer "AA")) (Q.fromList $ map (fmap (0,)) $ pout Map.! Portal Outer "AA")
+  pure (finalAnsa, finalAnsb)

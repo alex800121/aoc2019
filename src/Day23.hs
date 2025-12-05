@@ -37,14 +37,15 @@ day23b v = runST $ do
       MV.write ics i (ic' {_output = S.empty})
       f (xs <> o) delivered r ics
 
-day23 :: IO ()
+day23 :: IO (String, String)
 day23 = do
   oc <- readPure <$> (getDataDir >>= readFile . (++ "/input/input23.txt"))
-  putStrLn
-    . ("day23a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ day23a oc
-  putStrLn
-    . ("day23b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ day23b oc
+  pure (finalAnsa, finalAnsb)

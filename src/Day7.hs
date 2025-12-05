@@ -28,16 +28,17 @@ day7b v i = runST $ do
       | _halt x = pure (Just i)
       | otherwise = runIntCode (x {_input = _input x <> i}) >>= \x' -> f (xs :|> (x' {_output = S.empty})) (_output x')
 
-day7 :: IO ()
+day7 :: IO (String, String)
 day7 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input7.txt"))
-  putStrLn
-    . ("day7a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . maximum
     $ map ((\(x :<| _) -> x) . day7a v) inputA
-  putStrLn
-    . ("day7b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     . maximum
     $ map (fmap (\(x :<| _) -> x) . day7b v) inputB
+  pure (finalAnsa, finalAnsb)

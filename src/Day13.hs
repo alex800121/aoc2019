@@ -56,18 +56,19 @@ fromInt 2 = '#'
 fromInt 3 = '_'
 fromInt 4 = 'o'
 
-day13 :: IO ()
+day13 :: IO (String, String)
 day13 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input13.txt"))
-  putStrLn
-    . ("day13a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . Map.size
     . Map.filter (== 2)
     . snd
     . drawScreen (0, Map.empty)
     $ runST (fromPure v >>= runIntCode <&> _output)
-  putStrLn
-    . ("day13b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ play v
+  pure (finalAnsa, finalAnsb)

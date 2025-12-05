@@ -64,16 +64,17 @@ shuffleTime = 101741582076661
 mergeInstruction :: (KnownNat n) => [Affine n] -> Affine n
 mergeInstruction = mconcat . reverse
 
-day22 :: IO ()
+day22 :: IO (String, String)
 day22 = do
   input <- lines <$> (getDataDir >>= readFile . (++ "/input/input22.txt"))
   let permA = mergeInstruction $ map readAffine input
       permB = invert $ stimes shuffleTime $ mergeInstruction $ map readAffine input
-  putStrLn
-    . ("day22a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ applyAff permA (2019 :: SmallDeck)
-  putStrLn
-    . ("day22b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ applyAff permB (2020 :: BigDeck)
+  pure (finalAnsa, finalAnsb)

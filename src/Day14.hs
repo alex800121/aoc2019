@@ -72,17 +72,18 @@ binSearch reaction target l u
     l' = f l
     m' = f m
 
-day14 :: IO ()
+day14 :: IO (String, String)
 day14 = do
   reaction <- Map.unions . map inputParser . lines <$> (getDataDir >>= readFile . (++ "/input/input14.txt"))
   let remains = Map.singleton "FUEL"
       goal = "ORE"
-  putStrLn
-    . ("day14a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . (Map.! "ORE")
     $ buildTarget reaction goal (remains 1)
-  putStrLn
-    . ("day14b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ binSearch reaction 1000000000000 1 256
+  pure (finalAnsa, finalAnsb)

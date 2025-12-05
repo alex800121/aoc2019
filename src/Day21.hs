@@ -50,16 +50,17 @@ insB =
     "AND T J"
   ]
 
-day21 :: IO ()
+day21 :: IO (String, String)
 day21 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input21.txt"))
-  putStrLn
-    . ("day21a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . (\(_ :|> x) -> x)
     $ runST (fromPure v >>= \x -> runIntCode (x {_input = S.fromList (toIns insA "WALK\n")}) <&> _output)
-  putStrLn
-    . ("day21b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     . (\(_ :|> x) -> x)
     $ runST (fromPure v >>= \x -> runIntCode (x {_input = S.fromList (toIns insB "RUN\n")}) <&> _output)
+  pure (finalAnsa, finalAnsb)

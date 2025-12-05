@@ -64,7 +64,7 @@ buildAns (x, xs) = intercalate [10] (routine : subRoutine <> [[ord 'n']]) <> [10
 
 day17a m = sum [x * y | ((x, y), '#') <- I.assocs m, 2 < length (filter ((Just '#' ==) . (m I.!?) . bimap (+ x) (+ y) . toIndex) [minBound .. maxBound])]
 
-day17 :: IO ()
+day17 :: IO (String, String)
 day17 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input17.txt"))
   let input = runST (fromPure v >>= runIntCode <&> map chr . toList . _output)
@@ -75,11 +75,12 @@ day17 = do
       routine = buildRoutine [] [] $ buildPath m
       ans = head $ map buildAns routine
       v' = v {_pureCode = _pureCode v V.// [(0, 2)], _pureInput = S.fromList ans}
-  putStrLn
-    . ("day17a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     $ day17a m
-  putStrLn
-    . ("day17b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ runST (fromPure v' >>= runIntCode <&> (\(xs :|> x) -> x) . _output)
+  pure (finalAnsa, finalAnsb)

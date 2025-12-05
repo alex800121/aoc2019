@@ -38,18 +38,19 @@ calcDistance (x, y) (((x0, y0), (x1, y1)) : xs)
 manhattan :: Index -> Index -> Int
 manhattan (a, b) (c, d) = abs (a - c) + abs (b - d)
 
-day3 :: IO ()
+day3 :: IO (String, String)
 day3 = do
   l0 : l1 : _ <- map (drawLine . splitOn ",") . lines <$> (getDataDir >>= readFile . (++ "/input/input3.txt"))
   let l = delete (0, 0) $ catMaybes [fst <$> intersect x y | x <- l0, y <- l1]
       l' = minimum $ catMaybes [(+) <$> calcDistance x l0 <*> calcDistance x l1 | x <- l]
-  putStrLn
-    . ("day3a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . minimum
     . map (manhattan (0, 0))
     $ l
-  putStrLn
-    . ("day3b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ l'
+  pure (finalAnsa, finalAnsb)

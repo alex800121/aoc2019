@@ -9,17 +9,18 @@ tall = 6
 
 wide = 25
 
-day8 :: IO ()
+day8 :: IO (String, String)
 day8 = do
   input <- chunksOf (tall * wide) . init <$> (getDataDir >>= readFile . (++ "/input/input8.txt"))
-  putStrLn
-    . ("day8a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . ((*) <$> length . filter (== '1') <*> length . filter (== '2'))
     . minimumBy (compare `on` length . filter (== '0'))
     $ input
-  putStrLn
-    . ("day8b: \n" ++)
+  let
+   !finalAnsb
+    = ('\n' :)
     . unlines
     . chunksOf 25
     . foldl'
@@ -34,3 +35,4 @@ day8 = do
       )
       (repeat '2')
     $ input
+  pure (finalAnsa, finalAnsb)

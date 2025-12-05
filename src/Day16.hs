@@ -24,9 +24,9 @@ fastStep = parMap rpar ((`mod` 10) . sum . zipWith (*) m)
 
 l = 650 :: Int
 
-i = 100
+i = 100 :: Int
 
-r = 10000
+r = 10000 :: Int
 
 m :: [Int] =
   [ fromIntegral (binCoeffMod10 (k + 99) k `mod` 10)
@@ -43,7 +43,7 @@ binCoeffModPrime a b p = go 1 a b
         (da, ma) = a `divMod` p
         (db, mb) = b `divMod` p
 
-binCoeffMod10 a b = (5 :: Integer) * binCoeffModPrime a b 2 - 4 * binCoeffModPrime a b 5
+binCoeffMod10 a b = 5 * binCoeffModPrime a b 2 - 4 * binCoeffModPrime a b 5
 
 -- extEuc 2 5
 -- (-2,1,1)
@@ -51,19 +51,20 @@ binCoeffMod10 a b = (5 :: Integer) * binCoeffModPrime a b 2 - 4 * binCoeffModPri
 -- N = m2 mod 2 = m5 mod 5 = m10 mod 10
 -- m10 = m2 * 5 * 1 + m5 * -2 * 2
 
-day16 :: IO ()
+day16 :: IO (String, String)
 day16 = do
   input <- init <$> (getDataDir >>= readFile . (++ "/input/input16.txt"))
   let input' = map digitToInt input
       offset = read $ take 7 input
       !l' = take 8 $ tails (drop offset $ concat (replicate (fromIntegral r) input'))
-  putStrLn
-    . ("day16a: " ++)
-    . map intToDigit
+  let
+   !finalAnsa
+    = map intToDigit
     . V.toList
     . V.take 8
     $ iterate step (V.fromList input') !! 100
-  putStrLn
-    . ("day16b: " ++)
-    . map intToDigit
+  let
+   !finalAnsb
+    = map intToDigit
     $ fastStep l'
+  pure (finalAnsa, finalAnsb)

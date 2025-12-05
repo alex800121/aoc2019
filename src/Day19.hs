@@ -47,15 +47,16 @@ day19b ic = go 0 99
         x' = x + 99
         y' = y - 99
 
-day19 :: IO ()
+day19 :: IO (String, String)
 day19 = do
   v <- readPure <$> (getDataDir >>= readFile . (++ "/input/input19.txt"))
-  putStrLn
-    . ("day19a: " ++)
-    . show
+  let
+   !finalAnsa
+    = show
     . V.foldl' (\acc (x, y) -> acc + y - x) 0
     $ buildBeam v 50 50
-  putStrLn
-    . ("day19b: " ++)
-    . show
+  let
+   !finalAnsb
+    = show
     $ day19b v
+  pure (finalAnsa, finalAnsb)
